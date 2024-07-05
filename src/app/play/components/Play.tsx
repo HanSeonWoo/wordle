@@ -14,6 +14,7 @@ import { useCallback, useEffect, useState } from "react";
 import ResultModal from "./ResultModal";
 import VirtualKeyboard from "./VirtualKeyboard";
 import WordGrid from "./WordGrid";
+import { ANIMATION_TIME } from "./WordCard";
 
 export default function Play({ answer }: { answer: string }) {
   const [gameState, setGameState] = useState<GameState>({
@@ -73,7 +74,7 @@ export default function Play({ answer }: { answer: string }) {
           // 짧은 지연 후 결과 모달 표시
           setTimeout(() => {
             setShowResults(true);
-          }, 300 * 5); //
+          }, ANIMATION_TIME * 5); //
         }
       } else if (key === "BACKSPACE") {
         setCurrentGuess((prev) => prev.slice(0, -1));

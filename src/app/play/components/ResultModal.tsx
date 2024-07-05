@@ -8,6 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import React from "react";
+import WordleGuessDistribution from "./WordleGuessDistribution";
 
 export interface CurrentGameStats {
   win: boolean;
@@ -50,6 +51,9 @@ const ResultModal: React.FC<ResultModalProps> = ({
             <p>플레이 시간: {getGameDuration(currentGameStats.startTime)}</p>
             <p>시도 횟수: {currentGameStats.guesses.length}</p>
           </div>
+          <WordleGuessDistribution
+            guessDistribution={overallStats.guessDistribution}
+          />
           <div>
             <h3 className="font-semibold">전체 통계</h3>
             <p>총 게임 수: {overallStats?.totalPlays}</p>
