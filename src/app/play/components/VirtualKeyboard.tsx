@@ -1,16 +1,19 @@
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import React from "react";
 
 interface VirtualKeyboardProps {
   onKeyPress: (key: string) => void;
   guesses: string[];
   answer: string;
+  currentGuess: string;
 }
 
 const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
   onKeyPress,
   guesses,
   answer,
+  currentGuess,
 }) => {
   const rows = [
     ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
@@ -50,10 +53,14 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
             <Button
               key={key}
               onClick={() => onKeyPress(key)}
-              className={`px-2 py-3 mx-0.5 text-sm font-bold rounded
-                ${key.length > 1 ? "px-4" : "min-w-[30px]"}
-                ${getKeyState(key)}
-                text-white shadow-md hover:opacity-80 transition-opacity`}
+              className={cn(
+                "px-2 py-3 mx-0.5 text-sm font-bold rounded text-white shadow-md hover:bg-gray-300 transition-opacity",
+                key.length > 1 ? "px-4" : "min-w-[30px]",
+                getKeyState(key),
+                currentGuess.length === 5 && key === "ENTER"
+                  ? "bg-gray-400 hover:bg-gray-400"
+                  : ""
+              )}
             >
               {key === "BACKSPACE" ? "←" : key}
             </Button>

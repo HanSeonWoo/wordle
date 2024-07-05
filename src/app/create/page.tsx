@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { checkWord } from "../util/checkWord";
 import { ClipboardIcon } from "@heroicons/react/24/outline";
+import { encodeWord } from "../util/hash";
 
 const CreateWordlePage: React.FC = () => {
   const [word, setWord] = useState("");
@@ -50,7 +51,7 @@ const CreateWordlePage: React.FC = () => {
         return;
       }
 
-      const newGameId = await createGame(word.toUpperCase());
+      const newGameId = encodeWord(word.toUpperCase());
       setGameId(newGameId);
       toast({
         title: "게임 생성 성공",
@@ -143,16 +144,5 @@ const CreateWordlePage: React.FC = () => {
     </div>
   );
 };
-
-// TODO: Implement this function to create a new game
-async function createGame(word: string): Promise<string> {
-  // This is a placeholder. In a real implementation, you would:
-  // 1. Send the word to your backend
-  // 2. The backend would validate the word, create a new game, and return a game ID
-  // 3. The game ID would be used to construct the URL for the new game
-  return new Promise((resolve) => {
-    setTimeout(() => resolve(btoa(word)), 500); // Simple base64 encoding for demo
-  });
-}
 
 export default CreateWordlePage;
