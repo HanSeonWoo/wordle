@@ -24,19 +24,21 @@ export interface WordleStorage {
 const STORAGE_KEY = "wordleGameStates";
 
 function getWordleStorage(): WordleStorage {
-  const storage = localStorage.getItem(STORAGE_KEY);
-  if (storage) {
-    const parsedStorage = JSON.parse(storage);
-    // 필요한 모든 키가 있는지 확인하고, 없으면 기본값 제공
-    return {
-      currentGames: parsedStorage.currentGames || {},
-      clearedGames: parsedStorage.clearedGames || [],
-      stats: parsedStorage.stats || {
-        totalPlays: 0,
-        wins: 0,
-        guessDistribution: {},
-      },
-    };
+  if (typeof window !== "undefined") {
+    const storage = localStorage.getItem(STORAGE_KEY);
+    if (storage) {
+      const parsedStorage = JSON.parse(storage);
+      // 필요한 모든 키가 있는지 확인하고, 없으면 기본값 제공
+      return {
+        currentGames: parsedStorage.currentGames || {},
+        clearedGames: parsedStorage.clearedGames || [],
+        stats: parsedStorage.stats || {
+          totalPlays: 0,
+          wins: 0,
+          guessDistribution: {},
+        },
+      };
+    }
   }
   return {
     currentGames: {},
@@ -50,7 +52,9 @@ function getWordleStorage(): WordleStorage {
 }
 
 function setWordleStorage(storage: WordleStorage): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
+  if (typeof window !== "undefined") {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
+  }
 }
 
 export function saveGameState(word: string, state: GameState): void {

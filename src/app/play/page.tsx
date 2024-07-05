@@ -1,3 +1,5 @@
+"use client";
+
 import Play from "./components/Play";
 
 const DEFAULT_WORD = "WORLD";

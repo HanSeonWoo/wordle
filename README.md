@@ -1,36 +1,118 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Wordle 클론 프로젝트
 
-## Getting Started
+이 프로젝트는 인기 있는 단어 게임 Wordle의 클론 버전입니다. 사용자가 6번의 시도 내에 5글자 단어를 맞추는 게임을 구현했습니다.
 
-First, run the development server:
+## 데모
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+실행 중인 프로젝트를 [여기](https://wordle-alpha-nine.vercel.app/)에서 확인할 수 있습니다.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 기술 스택
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- [Next.js](https://nextjs.org/): React 기반의 웹 애플리케이션 프레임워크
+- [Tailwind CSS](https://tailwindcss.com/): 유틸리티-퍼스트 CSS 프레임워크
+- [shadcn/ui](https://ui.shadcn.com/): 재사용 가능한 컴포넌트 라이브러리
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## 게임 규칙
 
-## Learn More
+1. 6번의 시도 안에 주어진 5글자 영어 단어(워들)를 맞춰야 합니다.
+2. 각 추측 후 타일의 색상이 변경됩니다:
+   - **초록색**: 글자가 정확한 위치에 있습니다.
+   - **노란색**: 글자가 단어에 존재하지만 다른 위치에 있습니다.
+   - **회색**: 글자가 단어에 존재하지 않습니다.
 
-To learn more about Next.js, take a look at the following resources:
+## 주요 기능 및 구현 조건
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. 첫 페이지에는 두 가지 옵션이 있습니다:
+   - 시작하기 (정답: WORLD)
+   - 워들 생성하기
+2. 워들 생성 기능:
+   - 사용자가 직접 5글자 워들을 생성할 수 있습니다.
+   - URL 라우팅을 통해 생성된 워들을 풀이할 수 있습니다.
+   - 브라우저 종료 후에도 URL을 통해 이전 게임 상태에 접근할 수 있습니다.
+3. URL 해싱:
+   - URL에 직접적으로 정답이 노출되지 않도록 해싱 처리됩니다.
+4. 단어 검증:
+   - 입력된 단어의 유효성을 API를 통해 검증합니다.
+   - 유효하지 않은 단어 입력 시 오류 메시지를 표시합니다.
+5. 게임 종료 후 결과 표시:
+   - 게임 플레이 시간
+   - 총 승리 횟수
+   - 전체 승률
+   - 시도 횟수별 통계
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## 주요 고민 포인트
 
-## Deploy on Vercel
+### 1. 게임 진행 상태 저장 방식
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**선택: Local Storage**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- **장점**:
+  - 클라이언트 측 저장으로 빠른 접근 가능
+  - 서버 부하 감소
+  - 간단한 구현
+- **고려사항**:
+  - 전체 통계 등 복잡한 데이터 관리가 필요 없는 경우에 적합
+  - 간단한 게임 특성상 충분한 저장 방식
+
+### 2. URL 해싱 방법
+
+**선택: Base64 인코딩**
+
+- **고려한 옵션**:
+  - SHA-256
+  - AES
+  - Base64
+- **선택 이유**:
+  - URL 길이를 비교적 짧게 유지 가능
+  - 간단한 구현
+  - 복호화 가능 (게임 특성상 높은 보안 수준은 불필요)
+  - 답안을 가리는 정도의 간단한 인코딩으로 충분
+
+---
+
+**Wordle**
+
+6번의 시도 안에 오늘의 **워들**을 알아내세요.
+
+**게임방법**
+
+워들은 6번의 시도로 주워진 5글자의 영어단어를 추측하는 게임입니다.
+만약 주워진 영어단어가 **WORLD**이고 단어 WEARY라는 단어를 입력했다고 하면 아래처럼 표시됩니다. 각색이 의미하는 것은
+
+만약 타일이 **초록색**으로 표시된다면:
+
+- 표시된 글자가 워들에 존재한다.
+- 표시된 글자가 정확히 같은 위치에 위치한다.
+
+만약 타일이 **노란색**으로 표시된다면:
+
+- 표시된 글자가 워들에 존재한다.
+- 하지만 정확히 같은 위치에 있지는 않다.
+
+만약 타일이 **회색**으로 표시된다면:
+
+- 이 글자는 워들에 없는 글자이다.
+- 같은 글자를 둘 이상 제시했을 때 워들에 존재하는 개수보다 더 많은 경우에도 이렇게 표시된다.
+
+**조건**
+
+1. 첫 페이지에 들어오면 두가지 버튼이 있습니다. 시작하기(정답은 WORLD로 고정), 워들 생성하기
+2. 워들 생성하기 버튼을 누르면 5글자로 된 워들을 직접 생성 가능합니다.
+
+- URL라우팅을 통해 생성한 워들을 풀이 가능하게 합니다. (브라우저를 종료해도 해당 URL로 접속하면 풀이하던 워들이 남아있어야 합니다. 또한 "해시(암호화)된 단어"가 포함된 URL을 다른 사람들에게 보낸 경우, 동작해야합니다.)
+- URL을 통해 바로 정답이 노출되면 안됩니다. 예 (정답이 WORLD일 경우 잘못된 예 :localhost:xxxx/WORLD → 올바른 예 localhost:xxxx/AgagG)
+
+1. 입력되는 값들은 실제로 존재하는 단어야만 합니다.
+
+- 단어 검증은 해당 API에 요청을 보내서 검증합니다.
+- 단어 검증 실패시, 단어를 찾을 수 없습니다 라는 메세지가 표시됩니다.
+
+1. 게임이 끝나게 되면 결과 창에 표시되어야 할 값들
+
+- 이번 게임 플레이시간
+- 현재까지 워들을 승리한 횟수
+- 현재까지의 워들 승률
+- 현재까지 워들 시도한 횟수의 통계
+
+1. 자신이 문제를 해결한 방법을 문서에 남겨야 합니다.
+2. 실제 회사에서 프로덕션 레벨에서 사용하는 프로젝트라 생각하고 구현해주세요.
